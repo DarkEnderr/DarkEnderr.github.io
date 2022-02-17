@@ -1,0 +1,988 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  
+<link rel="apple-touch-icon" type="image/png" href="https://cpwebassets.codepen.io/assets/favicon/apple-touch-icon-5ae1a0698dcc2402e9712f7d01ed509a57814f994c660df9f7a952f3060705ee.png" />
+<meta name="apple-mobile-web-app-title" content="CodePen">
+
+<link rel="shortcut icon" type="image/x-icon" href="https://cpwebassets.codepen.io/assets/favicon/favicon-aec34940fbc1a6e787974dcd360f2c6b63348d4b1f4e06c77743096d55480f33.ico" />
+
+<link rel="mask-icon" type="image/x-icon" href="https://cpwebassets.codepen.io/assets/favicon/logo-pin-8f3771b1072e3c38bd662872f6b673a722f4b3ca2421637d5596661b4e2132cc.svg" color="#111" />
+
+
+  <meta charset="utf-8">
+  <meta name='viewport' content='width=device-width, initial-scale=1'>
+
+  <title>Blackjack</title>
+
+  <link rel="stylesheet" media="screen" href="https://cpwebassets.codepen.io/assets/fullpage/fullpage-1580f96ce81ff0a427cf57dda2748ce646c38efc201ae5942a29958cffa6856d.css" />
+  
+  
+<link rel="apple-touch-icon" type="image/png" href="https://cpwebassets.codepen.io/assets/favicon/apple-touch-icon-5ae1a0698dcc2402e9712f7d01ed509a57814f994c660df9f7a952f3060705ee.png" />
+<meta name="apple-mobile-web-app-title" content="CodePen">
+
+<link rel="shortcut icon" type="image/x-icon" href="https://cpwebassets.codepen.io/assets/favicon/favicon-aec34940fbc1a6e787974dcd360f2c6b63348d4b1f4e06c77743096d55480f33.ico" />
+
+<link rel="mask-icon" type="image/x-icon" href="https://cpwebassets.codepen.io/assets/favicon/logo-pin-8f3771b1072e3c38bd662872f6b673a722f4b3ca2421637d5596661b4e2132cc.svg" color="#111" />
+
+
+
+
+  <title>Blackjack</title>
+  <script>
+  if (document.location.search.match(/type=embed/gi)) {
+    window.parent.postMessage("resize", "*");
+  }
+</script>
+
+
+  <style>
+    html { font-size: 15px; }
+    html, body { margin: 0; padding: 0; min-height: 100%; }
+    body { height:100%; display: flex; flex-direction: column; }
+    .referer-warning {
+      background: black;
+      box-shadow: 0 2px 5px rgba(0,0,0, 0.5);
+      padding: 0.75em;
+      color: white;
+      text-align: center;
+      font-family: var(--cp-font-family);
+      line-height: 1.2;
+      font-size: 1rem;
+      position: relative;
+      z-index: 2;
+    }
+    .referer-warning h1 { font-size: 1.2rem; margin: 0; }
+    .referer-warning a { color: #56bcf9; } /* $linkColorOnBlack */
+  </style>
+</head>
+
+<body class="">
+
+  <div id="result-iframe-wrap" role="main">
+
+    <iframe
+      id="result"
+      srcdoc="
+<!DOCTYPE html>
+<html lang=&quot;en&quot; >
+
+<head>
+
+  <meta charset=&quot;UTF-8&quot;>
+  
+<link rel=&quot;apple-touch-icon&quot; type=&quot;image/png&quot; href=&quot;https://cpwebassets.codepen.io/assets/favicon/apple-touch-icon-5ae1a0698dcc2402e9712f7d01ed509a57814f994c660df9f7a952f3060705ee.png&quot; />
+<meta name=&quot;apple-mobile-web-app-title&quot; content=&quot;CodePen&quot;>
+
+<link rel=&quot;shortcut icon&quot; type=&quot;image/x-icon&quot; href=&quot;https://cpwebassets.codepen.io/assets/favicon/favicon-aec34940fbc1a6e787974dcd360f2c6b63348d4b1f4e06c77743096d55480f33.ico&quot; />
+
+<link rel=&quot;mask-icon&quot; type=&quot;image/x-icon&quot; href=&quot;https://cpwebassets.codepen.io/assets/favicon/logo-pin-8f3771b1072e3c38bd662872f6b673a722f4b3ca2421637d5596661b4e2132cc.svg&quot; color=&quot;#111&quot; />
+
+
+  <title>Blackjack</title>
+  <script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js&quot; type=&quot;text/javascript&quot;></script>
+
+
+  <link rel=&quot;stylesheet&quot; href=&quot;https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css&quot;>
+
+  <link rel='stylesheet' href='https://static.yanke.ru/css/vendor/bootstrap.btn.css'>
+  
+<style>
+.deck {
+    width: 110px;
+    height: 150px;
+    margin: 30px auto;
+    box-shadow: 3px 3px 0 #999, -2px 0px 4px rgba(0,0,0,.3);
+    border: 1px solid #999 !important;
+}
+.player-hand,
+.casino {
+    text-align: center;
+    height: 150px;
+    margin-top: 20px;
+    position: relative;
+}
+.player-hand .card,
+.casino .card { position: absolute }
+.card.anim {
+    position: absolute;
+    z-index: 10;
+}
+.card { font-family: &quot;Times New Roman&quot;, Times, serif }
+.deck span { display: block }
+.spades,
+.clubs { color: #000 }
+.hearts,
+.diams { color: #f00 }
+.pack .card.static { -webkit-animation: all .5s ease }
+.control {
+    padding: 10px;
+    color: #fff;
+    margin: 20px 0 0;
+    background: #000;
+}
+.control-wrap {
+    width: 370px;
+    margin: 0 auto;
+    padding: 15px;
+}
+.bank {
+    font-weight: bold;
+    float: left;
+    padding: 2px;
+    margin: 0 10px 0 0;
+}
+.bank span {
+    display: inline-block;
+    width: 36px;
+    text-align: left;
+    overflow: hidden;
+}
+.bet { margin: 0 10px }
+.bet input {
+    margin: 0 2px;
+    background: black;
+    border: 1px solid white;
+    color: white;
+    width: 50px;
+    text-align: center;
+}
+.wager {
+    width: 155px;
+    float: left;
+    margin: 3px;
+}
+.actions { width: 400px }
+.actions .btn { margin: 0 5px }
+button:first-letter { text-decoration: underline }
+.speakballon {
+    position: absolute;
+    width: 200px;
+    text-align: center;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    z-index: 999;
+    opacity: .7;
+    background: #fff;
+}
+.casino-speak {
+    top: 250px;
+    left: 20%;
+}
+.speakballon:before,
+.speakballon:after {
+    content: '';
+    display: block;
+    width: 0;
+    height: 0;
+    position: absolute;
+}
+.casino-speak:before {
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-bottom: 10px solid #ccc;
+    top: -10px;
+    left: 20px;
+}
+.casino-speak:after {
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-bottom: 8px solid white;
+    top: -8px;
+    left: 22px;
+}
+.player-speak {
+    top: 250px;
+    right: 20%;
+}
+.player-speak:before {
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-top: 10px solid #ccc;
+    bottom: -10px;
+    right: 20px;
+}
+.player-speak:after {
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-top: 8px solid white;
+    bottom: -8px;
+    right: 22px;
+}
+.deal-btn { position: relative }
+.deal-btn .btn { padding-right: 30px }
+.deal-btn .autodeal {
+    position: absolute;
+    top: 4px;
+    right: 14px;
+}
+.face .mark:first-child {
+    position: absolute;
+    top: 1px;
+    left: 1px;
+}
+.face .mark:last-child {
+    position: absolute;
+    bottom: 1px;
+    right: 1px;
+    transform: rotate(180deg);
+}
+.face .mark:last-child  h2 { padding-left: 2px }
+h1,
+h2 {
+    margin: 0;
+    padding: 0;
+    line-height: .9;
+    width: 12px;
+    text-align: center;
+    text-transform: uppercase;
+}
+.face .mark {
+    display: block;
+    width: 15px;
+    height: 40px;
+}
+.face .suit {
+    width: 21px;
+    height: 35px;
+    text-align: center;
+}
+.mark h1 {
+    font-size: 17px;
+    letter-spacing: -2px;
+}
+.mark h2 {
+    font-size: 20px;
+    padding-left: 1px;
+}
+.valA .suit,
+.valAone .suit {
+    font-size: 100px !important;
+    width: 110px;
+    text-align: center;
+    left: -2px;
+    top: 10px;
+}
+.valK .suit,
+.valQ .suit,
+.valJ .suit {
+    font-size: 40px !important;
+    width: 110px;
+    text-align: center;
+    left: -2px;
+    top: 50px;
+}
+.face span.suit:nth-child(n+1) {
+    font-size: 30px;
+    position: absolute;
+}
+.val2 .suit:nth-child(2) {
+    top: 3px;
+    left: 44px;
+}
+.val2 .suit:nth-child(3) {
+    transform: rotate(180deg);
+    top: 105px;
+    left: 44px;
+}
+.val3 .suit:nth-child(2) {
+    top: 3px;
+    left: 44px;
+}
+.val3 .suit:nth-child(3) {
+    top: 55px;
+    left: 44px;
+}
+.val3 .suit:nth-child(4) {
+    transform: rotate(180deg);
+    top: 112px;
+    left: 44px;
+}
+.val4 .suit:nth-child(2) {
+    top: 3px;
+    left: 20px;
+}
+.val4 .suit:nth-child(3) {
+    top: 3px;
+    left: 70px;
+}
+.val4 .suit:nth-child(4) {
+    transform: rotate(180deg);
+    top: 112px;
+    left: 20px;
+}
+.val4 .suit:nth-child(5) {
+    transform: rotate(180deg);
+    top: 112px;
+    left: 70px;
+}
+.val5 .suit:nth-child(2) {
+    top: 3px;
+    left: 20px;
+}
+.val5 .suit:nth-child(3) {
+    top: 3px;
+    left: 70px;
+}
+.val5 .suit:nth-child(4) {
+    top: 56px;
+    left: 44px;
+}
+.val5 .suit:nth-child(5) {
+    transform: rotate(180deg);
+    top: 112px;
+    left: 70px;
+}
+.val5 .suit:nth-child(6) {
+    transform: rotate(180deg);
+    top: 112px;
+    left: 20px;
+}
+.val6 .suit:nth-child(2) {
+    top: 3px;
+    left: 20px;
+}
+.val6 .suit:nth-child(3) {
+    top: 3px;
+    left: 70px;
+}
+.val6 .suit:nth-child(4) {
+    top: 56px;
+    left: 20px;
+}
+.val6 .suit:nth-child(5) {
+    top: 56px;
+    left: 70px;
+}
+.val6 .suit:nth-child(6) {
+    transform: rotate(180deg);
+    top: 112px;
+    left: 20px;
+}
+.val6 .suit:nth-child(7) {
+    transform: rotate(180deg);
+    top: 112px;
+    left: 70px;
+}
+.val7 .suit:nth-child(2) {
+    top: 3px;
+    left: 20px;
+}
+.val7 .suit:nth-child(3) {
+    top: 3px;
+    left: 70px;
+}
+.val7 .suit:nth-child(4) {
+    top: 28px;
+    left: 44px;
+}
+.val7 .suit:nth-child(5) {
+    top: 56px;
+    left: 20px;
+}
+.val7 .suit:nth-child(6) {
+    top: 56px;
+    left: 70px;
+}
+.val7 .suit:nth-child(7) {
+    transform: rotate(180deg);
+    top: 112px;
+    left: 20px;
+}
+.val7 .suit:nth-child(8) {
+    transform: rotate(180deg);
+    top: 112px;
+    left: 70px;
+}
+.val8 .suit:nth-child(2) {
+    top: 3px;
+    left: 20px;
+}
+.val8 .suit:nth-child(3) {
+    top: 3px;
+    left: 70px;
+}
+.val8 .suit:nth-child(4) {
+    top: 28px;
+    left: 44px;
+}
+.val8 .suit:nth-child(5) {
+    top: 56px;
+    left: 20px;
+}
+.val8 .suit:nth-child(6) {
+    top: 56px;
+    left: 70px;
+}
+.val8 .suit:nth-child(7) {
+    transform: rotate(180deg);
+    top: 82px;
+    left: 44px;
+}
+.val8 .suit:nth-child(8) {
+    transform: rotate(180deg);
+    top: 112px;
+    left: 70px;
+}
+.val8 .suit:nth-child(9) {
+    transform: rotate(180deg);
+    top: 112px;
+    left: 20px;
+}
+.val9 .suit:nth-child(2) {
+    top: 3px;
+    left: 20px;
+}
+.val9 .suit:nth-child(3) {
+    top: 3px;
+    left: 70px;
+}
+.val9 .suit:nth-child(4) {
+    top: 58px;
+    left: 44px;
+}
+.val9 .suit:nth-child(5) {
+    top: 39px;
+    left: 20px;
+}
+.val9 .suit:nth-child(6) {
+    top: 39px;
+    left: 70px;
+}
+.val9 .suit:nth-child(7) {
+    transform: rotate(180deg);
+    top: 76px;
+    left: 20px;
+}
+.val9 .suit:nth-child(8) {
+    transform: rotate(180deg);
+    top: 76px;
+    left: 70px;
+}
+.val9 .suit:nth-child(9) {
+    transform: rotate(180deg);
+    top: 112px;
+    left: 20px;
+}
+.val9 .suit:nth-child(10) {
+    transform: rotate(180deg);
+    top: 112px;
+    left: 70px;
+}
+.val10 .suit:nth-child(2) {
+    top: 3px;
+    left: 20px;
+}
+.val10 .suit:nth-child(3) {
+    top: 3px;
+    left: 70px;
+}
+.val10 .suit:nth-child(4) {
+    top: 21px;
+    left: 44px;
+}
+.val10 .suit:nth-child(5) {
+    top: 39px;
+    left: 20px;
+}
+.val10 .suit:nth-child(6) {
+    top: 39px;
+    left: 70px;
+}
+.val10 .suit:nth-child(7) {
+    transform: rotate(180deg);
+    top: 76px;
+    left: 20px;
+}
+.val10 .suit:nth-child(8) {
+    transform: rotate(180deg);
+    top: 76px;
+    left: 70px;
+}
+.val10 .suit:nth-child(9) {
+    transform: rotate(180deg);
+    top: 94px;
+    left: 44px;
+}
+.val10 .suit:nth-child(10) {
+    transform: rotate(180deg);
+    top: 112px;
+    left: 20px;
+}
+.val10 .suit:nth-child(11) {
+    transform: rotate(180deg);
+    top: 112px;
+    left: 70px;
+}
+.card,
+.face,
+.back,
+.deck { border-radius: 4px }
+.card {
+    width: 110px;
+    height: 150px;
+    display: inline-block;
+    position: relative;
+    font-size: .8em;
+    -webkit-perspective: 600px;
+    -moz-perspective: 600px;
+}
+.back,
+.deck {
+background-color: #6d695c;
+background-image:
+repeating-linear-gradient(120deg, rgba(255,255,255,.1), rgba(255,255,255,.1) 1px, transparent 1px, transparent 60px),
+repeating-linear-gradient(60deg, rgba(255,255,255,.1), rgba(255,255,255,.1) 1px, transparent 1px, transparent 60px),
+linear-gradient(60deg, rgba(0,0,0,.1) 25%, transparent 25%, transparent 75%, rgba(0,0,0,.1) 75%, rgba(0,0,0,.1)),
+linear-gradient(120deg, rgba(0,0,0,.1) 25%, transparent 25%, transparent 75%, rgba(0,0,0,.1) 75%, rgba(0,0,0,.1));
+background-size: 70px 120px;
+}
+.card .back {
+    float: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 900;
+    width: inherit;
+    height: inherit;
+    text-align: center;
+    box-shadow: 0 1px 5px rgba(0,0,0,0.2);
+    transform: rotateX(0deg) rotateY(0deg);
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
+    transition: all .4s ease-in-out;
+}
+.card.flip .back {
+    z-index: 900;
+    border-color: #eee;
+    transform: rotateY(180deg);
+}
+.card .face {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 800;
+    width: inherit;
+    height: inherit;
+    border: 1px solid #ccc;
+    background: #fff;
+    transform: rotateY(-180deg);
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
+    transition: all .4s ease-in-out;
+}
+.card.flip .face {
+    z-index: 1000;
+    background: #fff;
+    transform: rotateX(0deg) rotateY(0deg);
+}
+</style>
+
+  <script>
+  window.console = window.console || function(t) {};
+</script>
+
+  <script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/prefixfree/1.0.7/prefixfree.min.js&quot;></script>
+
+  
+  <script>
+  if (document.location.search.match(/type=embed/gi)) {
+    window.parent.postMessage(&quot;resize&quot;, &quot;*&quot;);
+  }
+</script>
+
+
+</head>
+
+<body translate=&quot;no&quot; >
+  <div class=&quot;pack casino&quot;></div>
+
+<div class=&quot;deck&quot;></div>
+
+<div class=&quot;pack player-hand&quot;></div>
+
+<div class=&quot;control clearfix&quot;>
+  <div class=&quot;control-wrap&quot;>
+    <div class=&quot;wager&quot;>
+      <div class=&quot;bank&quot; title=&quot;Your money&quot;>$<span></span></div>
+      <div class=&quot;bet&quot;>
+        Bet <input title=&quot;Use UP/DOWN arrows to adjust bet&quot; type=&quot;number&quot; name=&quot;quantity&quot; min=&quot;5&quot; max=&quot;50&quot; step=&quot;5&quot; value=&quot;10&quot; class=&quot;bet-val&quot;>
+      </div>
+    </div>
+    <div class=&quot;actions&quot;>
+      <span class=&quot;deal-btn&quot;>
+        <button class=&quot;btn&quot; title=&quot;Press 'D' to Deal&quot;>Deal</button>
+        <input title=&quot;Press 'A' for Autodeal&quot; type=&quot;checkbox&quot; class=&quot;autodeal&quot;/>
+      </span>
+      <button class=&quot;btn hit-btn&quot;  title=&quot;Press 'H' to Hit&quot; disabled>Hit</button>
+      <button class=&quot;btn stand-btn&quot;  title=&quot;Press 'S' to Stand&quot; disabled>Stand</button>
+    </div>
+  </div>
+</div>
+    <script src=&quot;https://cpwebassets.codepen.io/assets/common/stopExecutionOnTimeout-1b93190375e9ccc259df3a57c1abc0e64599724ae30d7ea4c6877eb615f89387.js&quot;></script>
+
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
+      <script id=&quot;rendered-js&quot; >
+/*
+Author: @romanyanke
+Website: http://yanke.ru
+About: Black Jack game. 
+Date: 4-6 Dec '12
+Thanks: Lea Verou (http://lea.verou.me/css3patterns/), JSFromHell (http://jsfromhell.com/array/shuffle)
+*/
+var debug = '';
+$(function () {
+  var util = {
+    randomize: function (from, to, r) {
+      return Math.floor(Math.random() * (to - from) + from);
+    },
+    shuffle: function (v) {
+      for (var j, x, i = v.length; i; j = parseInt(Math.random() * i), x = v[--i], v[i] = v[j], v[j] = x) {if (window.CP.shouldStopExecution(0)) break;;}window.CP.exitedLoop(0);
+      return v;
+    },
+    local: {
+      set: function (key, val) {
+        if (Modernizr.localstorage) {
+          localStorage[key] = val;
+        }
+      },
+      get: function (key) {
+        if (Modernizr.localstorage) {
+          return localStorage[key];
+        } else return null;
+      } } };
+
+
+  var suit = ['spades', 'hearts', 'diams', 'clubs'];
+  var cards = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
+  var score = [11, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10];
+  var deck = [];
+  var game = [];
+  var speed = 500;
+  var playerHand = $('.player-hand');
+  var casino = $('.casino');
+  var hitstand = $('.hit-btn, .stand-btn');
+  var dealbtn = $('.deal-btn .btn, .bet-val');
+  var account = $('.bank span');
+  var total = {
+    player: 0,
+    casino: 0 };
+
+  var status = 'idle';
+  var stake = 0;
+  var money = util.local.get('21money') ? Math.max(util.local.get('21money'), 5) : 50;
+
+  account.html(money);
+  var deal = function (end) {
+    if (end === true) {
+      if (total.casino == total.player) {
+        say('Stay. ' + total.casino);
+        acc.give(+stake);
+      } else if (total.casino < total.player) {
+        say('You win $' + stake * 2);
+        acc.give(stake * 2);
+      } else {
+        say(total.casino + '. Casino wins');
+      }
+      replay();
+    }
+    if (game.length) {
+      var turn = game.shift();
+      var cardData = deck.shift();
+      debug += JSON.stringify(cardData) + ',';
+      /*card html*/
+      var card = '';
+      var mark = '<span class=&quot;mark&quot;>\
+							<h1>' + cardData.value + '</h1>\
+							<h2>&amp;' + cardData.suit + ';</h2>\
+						</span>';
+      var suits = '<span class=&quot;suit&quot;>&amp;' + cardData.suit + ';</span>';
+      if (cardData.order < 10) {
+        for (var l = 0; l < cardData.order; l++) {if (window.CP.shouldStopExecution(1)) break;
+          suits += '<span class=&quot;suit&quot;>&amp;' + cardData.suit + ';</span>';
+        }window.CP.exitedLoop(1);
+      }
+      card += '<div class=&quot;card ' + (turn.player ? 'player' : 'casino') + '-card val' + cardData.value + ' ' + cardData.suit + ' anim&quot;><div class=&quot;face&quot;>';
+      card += mark + suits + mark;
+      card += '</div><div class=&quot;back&quot;></div></div>';
+      card = $(card);
+      card.css({ top: $('.deck').offset().top, left: $('.deck').offset().left });
+      var pack = casino;
+      if (turn.player) {
+        pack = playerHand;
+        total.player += cardData.score;
+      } else {
+        total.casino += cardData.score;
+      }
+
+      /*card animation*/
+      var stack = pack.find('.card').length;
+      var size = pack.width() * .5;
+      $('body').append(card);
+      card.animate({ top: pack.offset().top }, speed, function () {
+        $(this).remove();
+        pack.append(card);
+        card.removeClass('anim').attr('style', Modernizr._prefixes.join('transform:rotate(' + util.randomize(-4, 3) + 'deg);')).css({ left: size - 55 });
+        var position = size - (stack + 1) * 55;
+        for (var i = 0; i <= stack; i++) {if (window.CP.shouldStopExecution(2)) break;
+          var c = pack.find('.card').eq(i);
+          var nextPos = position + util.randomize(105, 115) * i;
+          c.animate({ left: nextPos });
+        }window.CP.exitedLoop(2);
+      });
+      if (turn.flip) card.addClass('flip');
+      if (game.length) {
+        setTimeout(deal, speed);
+      }
+
+      if (turn.player) {
+        if (total.player > 21) {
+          var ace = $('.valA.player-card');
+          if (ace.length > 0 &amp;&amp; $('.player-card.valAone').length === 0) {
+            total.player -= 10;
+            ace.toggleClass('valA valAone');
+            if (total.player === 21) {
+              say('Black Jack! You win ' + stake * 3 + '$');
+              acc.give(stake * 3);
+              replay();
+            } else {
+              say('Your\'s score is ' + total.player);
+            }
+          } else {
+            say('You\'re busted');
+            hitstand.disable();
+            replay();
+          }
+        } else if (total.player === 21) {
+          say('Black Jack! You win ' + stake * 3 + '$');
+          hitstand.disable();
+          acc.give(stake * 3);
+          replay();
+        } else {
+          say('Your\'s score is ' + total.player);
+        }
+        if (pack.find('.card').length > 0 &amp;&amp; status !== 'end') {
+          setTimeout(function () {
+            hitstand.enable();
+          }, 1000);
+        }
+      } else if (status == 'casinoTurn') {
+        if (total.casino > 21) {
+          var ace = $('.valA.casino-card');
+          if (ace.length > 0 &amp;&amp; $('.casino-card.valAone').length === 0) {
+            total.casino -= 10;
+            ace.toggleClass('valA valAone');
+            if (total.casino === 21) {
+              say('Black Jack. Casino wins');
+              replay();
+            } else {
+              if (status === 'casinoTurn') {
+                setTimeout(casinoDeal, speed);
+              }
+            }
+          } else {
+            acc.give(stake * 2);
+            replay();
+            say('Casino\'s busted. You win ' + stake + '$');
+            acc.give(stake * 2);
+          }
+        } else if (total.casino === 21) {
+          say('Black Jack. Casino wins');
+          replay();
+        } else {
+          if (status === 'casinoTurn') {
+            setTimeout(casinoDeal, speed);
+          }
+        }
+      }
+    }
+  };
+  var replay = function () {
+    status = 'end';
+    setTimeout(redeal, 3000);
+  };
+
+  var dealer = function () {
+    deck = [];
+    for (var i = 0; i < 4; i++) {if (window.CP.shouldStopExecution(3)) break;
+      for (var l = 0; l < 13; l++) {if (window.CP.shouldStopExecution(4)) break;
+        deck.push({ value: cards[l], suit: suit[i], order: l, score: score[l] });
+      }window.CP.exitedLoop(4);
+    }window.CP.exitedLoop(3);
+
+    game = [
+    { player: true, flip: true },
+    { player: false, flip: true },
+    { player: true, flip: true },
+    { player: false, flip: false }];
+
+    total = {
+      player: 0,
+      casino: 0 };
+
+    deck = util.shuffle(deck);
+
+    say('New game');
+    debug += '<<NEW GAME>>';
+    stake = $('.bet-val').val();
+    if (stake < 5 || stake > 50) {
+      stake = 10;
+      $('.bet-val').val(10);
+    }
+    if (stake > money) {
+      stake = money;
+      $('.bet-val').val(stake);
+    }
+    util.local.set('21stake', stake);
+    status = 'game';
+    acc.take(stake);
+    deal();
+  };
+
+  var redeal = function () {
+    status = 'idle';
+    var center = $('.player-hand').width() * .5;
+    $('.player-hand .card, .casino .card').animate({ left: center - 55, opacity: 0 }, speed, function () {
+      $(this).remove();
+    });
+
+    if (money === 0) {
+      $('.autodeal').prop('checked', false);
+      say('There is another $5 to start the new game', 'casino', 5000);
+      acc.give(5);
+      $('.bet-val').val(5);
+    }
+
+    if ($('.autodeal').prop('checked')) {
+      setTimeout(dealer, speed * 1.2);
+    } else {
+      dealbtn.enable();
+    }
+  };
+
+  var casinoDeal = function () {
+    say(total.casino);
+    if (total.casino >= 17 || total.casino > total.player) {
+      setTimeout(function () {
+        deal(true);
+      }, speed);
+    } else {
+      game.push({ player: false, flip: true });
+      setTimeout(deal, speed);
+    }
+  };
+
+  var say = function (what, who, display) {
+    var target = who || 'casino';
+    var balloon = $('<div class=&quot;speakballon ' + target + '-speak&quot;>' + what + '</div>');
+    setTimeout(function () {
+      $('.' + target + '-speak').remove();
+      balloon.appendTo('body').fadeIn();
+    }, speed);
+    setTimeout(function () {
+      balloon.fadeOut(function () {
+        $(this).remove();
+      });
+    }, display || 2000);
+  };
+
+  var acc = {
+    take: function (i) {
+      money -= i;
+      account.html(money);
+      util.local.set('21money', money);
+    },
+    give: function (i) {
+      money += i;
+      account.html(money);
+      util.local.set('21money', money);
+    } };
+
+
+  $('.hit-btn').on('click', function () {
+    debug += '<<HIT>>';
+    hitstand.disable();
+    game.push({ player: true, flip: true });
+    say('Hit me', 'player');
+    deal();
+  });
+  $('.stand-btn').on('click', function () {
+    debug += '<<STAND>>';
+    hitstand.disable();
+    status = 'casinoTurn';
+    $('.casino .card:eq(1)').addClass('flip');
+    say('Stand', 'player');
+    setTimeout(casinoDeal, speed);
+  });
+
+  $('.autodeal').on('click', function () {
+    dealbtn.disable();
+    var btn = $('.deal-btn .btn');
+    var isOn = btn.toggleClass('btn-success').hasClass('btn-success');
+    if (status === 'idle') {
+      dealer();
+    }
+  });
+  $('.deal-btn .btn').on('click', function () {
+    dealbtn.disable();
+    dealer();
+  });
+
+  say('Make your bet');
+  $(document).on('keydown', function (e) {
+    switch (e.keyCode) {
+      case 68:
+        $('.deal-btn .btn:enabled').click();
+        break;
+      case 72:
+        $('.hit-btn:enabled').click();
+        break;
+      case 83:
+        $('.stand-btn:enabled').click();
+        break;
+      case 38:
+        $('.bet-val').val(Math.min(+$('.bet-val').val() + 5, 50));
+        break;
+      case 40:
+        $('.bet-val').val(Math.max(+$('.bet-val').val() - 5, 5));
+        break;
+      case 65:
+        $('.autodeal').click();
+        break;}
+
+  });
+  ;(function ($) {
+
+    $.fn.extend({
+      enable: function () {
+        this.prop('disabled', false);
+        return this;
+      },
+      disable: function () {
+        this.prop('disabled', true);
+        return this;
+      } });
+
+  })(jQuery);
+  $('.bet-val').val(util.local.get('21stake') || 10);
+});
+//# sourceURL=pen.js
+    </script>
+
+  
+
+</body>
+
+</html>
+ 
+"
+      sandbox="allow-downloads allow-forms allow-modals allow-pointer-lock allow-popups allow-presentation  allow-scripts allow-top-navigation-by-user-activation" allow="accelerometer; camera; encrypted-media; display-capture; geolocation; gyroscope; microphone; midi; clipboard-read; clipboard-write" allowTransparency="true"
+      allowpaymentrequest="true" allowfullscreen="true" class="result-iframe">
+      </iframe>
+
+  </div>
+</body>
+</html>
